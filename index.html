@@ -1,12 +1,10 @@
-// 手动写预加载列表
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目视频播放器</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
-    <style>
+    <title>WMV转MP4视频播放器</title>
+        <style>
         :root {
             --primary: #6a11cb;
             --secondary: #2575fc;
@@ -385,6 +383,73 @@
         .config-btn:hover {
             background: rgba(255, 255, 255, 0.2);
         }
+        
+        .format-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-left: 5px;
+        }
+        
+        .format-mp4 {
+            background: #28a745;
+        }
+        
+        .format-wmv {
+            background: #dc3545;
+        }
+        
+        .conversion-guide {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .conversion-guide h3 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .conversion-method {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+        
+        .conversion-method h4 {
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            display: block;
+            margin: 5px 0;
+        }
+        
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        
+        ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -416,13 +481,49 @@
                     提示: 默认路径为 /videos/，如果视频不在该文件夹，请修改路径
                 </p>
             </div>
+            
+            <!-- 转换指南 -->
+            <!-- <div class="conversion-guide" id="conversionGuide">
+                <h3>WMV 转 MP4 转换指南</h3>
+                <div class="warning">
+                    <strong>注意:</strong> 您的视频文件为WMV格式，浏览器无法直接播放。请先转换为MP4格式。
+                </div>
+                
+                <div class="conversion-method">
+                    <h4>方法1: 使用 FFmpeg（推荐）</h4>
+                    <p>安装FFmpeg后，使用以下命令：</p>
+                    <code>ffmpeg -i input.mp4 -c:v libx264 -c:a aac output.mp4</code>
+                    <p>批量转换脚本：</p>
+                    <code>for file in *.mp4; do ffmpeg -i "$file" -c:v libx264 -c:a aac "${file%.mp4}.mp4"; done</code>
+                </div>
+                
+                <div class="conversion-method">
+                    <h4>方法2: 使用在线转换工具</h4>
+                    <ul>
+                        <li>CloudConvert.com</li>
+                        <li>Zamzar.com</li>
+                        <li>Online-Convert.com</li>
+                    </ul>
+                </div>
+                
+                <div class="conversion-method">
+                    <h4>方法3: 使用桌面软件</h4>
+                    <ul>
+                        <li>HandBrake（免费）</li>
+                        <li>VLC 媒体播放器</li>
+                        <li>格式工厂</li>
+                    </ul>
+                </div>
+                
+                <button class="config-btn" onclick="hideConversionGuide()" style="margin-top:10px;">关闭指南</button>
+            </div> -->
         </div>
         
         <!-- 主内容区 -->
         <div class="main-content">
             <header>
-                <h1>项目视频播放器</h1>
-                <p class="subtitle">播放项目 videos 文件夹下的视频文件</p>
+                <h1>WMV转MP4视频播放器</h1>
+                <p class="subtitle">播放转换后的MP4格式视频文件</p>
                 <button class="toggle-sidebar" id="toggleSidebarMobile">📺 显示视频列表</button>
             </header>
             
@@ -479,7 +580,7 @@
     </div>
     
     <footer>
-        <p>项目视频播放器 | 播放 videos 文件夹下的视频 | 纯前端实现</p>
+        <p>WMV转MP4视频播放器 | 支持MP4格式视频播放 | 提供WMV转换指南</p>
     </footer>
 
     <script>
@@ -505,6 +606,7 @@
             const folderPath = document.getElementById('folderPath');
             const folderInput = document.getElementById('folderInput');
             const updateFolderBtn = document.getElementById('updateFolderBtn');
+            const conversionGuide = document.getElementById('conversionGuide');
             
             // 视频列表数据
             let videos = [];
@@ -601,7 +703,7 @@
                 } else if (container.mozRequestFullScreen) {
                     container.mozRequestFullScreen();
                 } else if (container.webkitRequestFullscreen) {
-                    container.webkitRequestFullscreen();
+                    container.webkitRequestfullscreen();
                 } else if (container.msRequestFullscreen) {
                     container.msRequestFullscreen();
                 }
@@ -669,6 +771,16 @@
                 }, 3000);
             }
             
+            // 显示转换指南
+            function showConversionGuide() {
+                conversionGuide.style.display = 'block';
+            }
+            
+            // 隐藏转换指南
+            function hideConversionGuide() {
+                conversionGuide.style.display = 'none';
+            }
+            
             // 加载视频列表
             function loadVideoList() {
                 // 更新文件夹路径显示
@@ -685,22 +797,21 @@
                 loadPredefinedVideos();
             }
             
-            // 加载预定义的视频列表
+            // 加载预定义的视频列表（WMV格式）
             function loadPredefinedVideos() {
-                // 这里是预定义的视频列表
-                // 在实际项目中，您需要根据您的视频文件修改这个列表
+                // 这里是预定义的视频列表（WMV格式）
                 const predefinedVideos = [
-                    { name: '1_机器学习应用领域.wmv', path: '1_机器学习应用领域.wmv', duration: 60 },
-                    { name: '2_机器学习基本术语.wmv', path: '2_机器学习基本术语.wmv', duration: 120 },
-                    { name: '3_机器学习方法分类.wmv', path: '3_机器学习方法分类.wmv', duration: 180 },
-		    { name: '4_机器学习建模流程.wmv', path: '4_机器学习建模流程.wmv', duration: 240 },
-		    { name: '5_特征工程的内容.wmv', path: '5_特征工程的内容.wmv', duration: 300 },
-		    { name: '6_特征工程方法_低方差过滤法.wmv', path: '6_特征工程方法_低方差过滤法.wmv', duration: 360 },
-		    { name: '7_特征工程方法_皮尔逊相关系数法.wmv', path: '7_特征工程方法_皮尔逊相关系数法.wmv', duration: 420 },
-		    { name: '8_特征工程方法_斯皮尔曼相关系数法.wmv', path: '8_特征工程方法_斯皮尔曼相关系数法.wmv', duration: 480 },
-		    { name: '9_特征工程方法_PCA.wmv', path: '9_特征工程方法_PCA.wmv', duration: 540 },
-		    { name: '10_PCA补充说明.wmv', path: '10_PCA补充说明.wmv', duration: 600 },
-                    // 您可以继续添加更多视频...
+                    { name: '1_机器学习应用领域.mp4', path: '1_机器学习应用领域.mp4', duration: 60, format: 'mp4' },
+                    { name: '2_机器学习基本术语.mp4', path: '2_机器学习基本术语.mp4', duration: 120, format: 'mp4' },
+                    { name: '3_机器学习方法分类.mp4', path: '3_机器学习方法分类.mp4', duration: 180, format: 'mp4' },
+                    { name: '4_机器学习建模流程.mp4', path: '4_机器学习建模流程.mp4', duration: 240, format: 'mp4' },
+                    { name: '5_特征工程的内容.mp4', path: '5_特征工程的内容.mp4', duration: 300, format: 'mp4' },
+                    { name: '6_特征工程方法_低方差过滤法.mp4', path: '6_特征工程方法_低方差过滤法.mp4', duration: 360, format: 'mp4' },
+                    { name: '7_特征工程方法_皮尔逊相关系数法.mp4', path: '7_特征工程方法_皮尔逊相关系数法.mp4', duration: 420, format: 'mp4' },
+                    { name: '8_特征工程方法_斯皮尔曼相关系数法.mp4', path: '8_特征工程方法_斯皮尔曼相关系数法.mp4', duration: 480, format: 'mp4' },
+                    { name: '9_特征工程方法_PCA.mp4', path: '9_特征工程方法_PCA.mp4', duration: 540, format: 'mp4' },
+                    { name: '10_PCA补充说明.mp4', path: '10_PCA补充说明.mp4', duration: 600, format: 'mp4' }
+                    { name: '11_PCA补充说明2.mp4', path: '11_PCA补充说明2.mp4', duration: 660, format: 'mp4' }
                 ];
                 
                 // 检查视频文件是否存在
@@ -710,6 +821,8 @@
             // 检查视频文件是否存在
             function checkVideosExist(videoList) {
                 let foundVideos = 0;
+                let foundMP4 = 0;
+                let foundWMV = 0;
                 
                 videoList.forEach(video => {
                     const videoUrl = videoFolderPath + video.path;
@@ -726,19 +839,29 @@
                             name: video.name,
                             path: video.path,
                             url: videoUrl,
-                            duration: video.duration || 0
+                            duration: video.duration || 0,
+                            format: video.format || 'wmv'
                         });
                         foundVideos++;
+                        
+                        if (video.format === 'mp4') foundMP4++;
+                        if (video.format === 'wmv') foundWMV++;
                     }
                 });
                 
                 if (foundVideos > 0) {
                     updateVideoListUI();
                     toggleEmptyState();
-                    showNotification(`找到 ${foundVideos} 个视频文件`);
+                    showNotification(`找到 ${foundVideos} 个视频文件 (${foundWMV}个WMV, ${foundMP4}个MP4)`);
                     
-                    // 自动播放第一个视频
-                    playVideo(0);
+                    // 自动播放第一个MP4格式的视频
+                    const firstMP4Index = videos.findIndex(v => v.format === 'mp4');
+                    if (firstMP4Index !== -1) {
+                        playVideo(firstMP4Index);
+                    } else if (videos.length > 0) {
+                        // 如果没有MP4，提示用户转换
+                        playVideo(0);
+                    }
                 } else {
                     showNotification('未找到视频文件，请检查文件夹路径');
                 }
@@ -751,6 +874,23 @@
                 currentVideoIndex = index;
                 const video = videos[index];
                 
+                // 检查格式支持
+                if (video.format === 'wmv') {
+                    // WMV格式不支持，显示转换指南
+                    showNotification(`⚠️ WMV格式不支持，请转换为MP4格式`);
+                    fileDetails.innerHTML = `
+                        <strong>文件名:</strong> ${video.name}<br>
+                        <strong>格式:</strong> <span style="color:#dc3545">WMV (不支持)</span><br>
+                        <strong>建议:</strong> 转换为MP4格式<br>
+                        <button onclick="showConversionGuide()" style="margin-top:10px; background:#ffc107; color:#000;">📝 查看转换指南</button>
+                    `;
+                    
+                    // 清空视频源
+                    videoPlayer.src = '';
+                    playPauseBtn.innerHTML = '<i>▶</i> 播放';
+                    return;
+                }
+                
                 // 设置视频源
                 videoPlayer.src = video.url;
                 
@@ -758,7 +898,8 @@
                 fileDetails.innerHTML = `
                     <strong>文件名:</strong> ${video.name}<br>
                     <strong>文件路径:</strong> ${videoFolderPath}${video.path}<br>
-                    <strong>视频时长:</strong> ${formatTime(video.duration)}
+                    <strong>视频时长:</strong> ${formatTime(video.duration)}<br>
+                    <strong>格式:</strong> <span style="color:#28a745">MP4 (支持)</span>
                 `;
                 
                 // 更新视频列表激活状态
@@ -792,10 +933,16 @@
                         li.classList.add('active');
                     }
                     
+                    // 根据格式显示不同的图标和标签
+                    const formatIcon = video.format === 'mp4' ? '✅' : '⚠️';
+                    const formatBadge = video.format === 'mp4' ? 
+                        '<span class="format-badge format-mp4">MP4</span>' : 
+                        '<span class="format-badge format-wmv">WMV</span>';
+                    
                     li.innerHTML = `
-                        <span class="video-icon">🎬</span>
+                        <span class="video-icon">${formatIcon}</span>
                         <div class="video-info">
-                            <div class="video-title">${video.name}</div>
+                            <div class="video-title">${video.name} ${formatBadge}</div>
                             <div class="video-duration">${formatTime(video.duration)}</div>
                         </div>
                     `;
